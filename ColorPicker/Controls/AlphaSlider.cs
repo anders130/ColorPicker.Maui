@@ -2,7 +2,7 @@
 
 public class AlphaSlider : SliderPicker
 {
-    protected override IEnumerable<SliderBase> GetSliders() 
+    protected override IEnumerable<SliderBase> GetSliders()
         => new SliderBase[]
         {
             new Slider( SliderFunctionsAlpha.NewValueAlpha,

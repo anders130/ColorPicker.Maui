@@ -19,15 +19,15 @@ public class HSLSliders : SliderPickerWithAlpha
                             SliderFunctionsHSL.GetPaintL )
             };
 
-        if ( ShowAlphaSlider )
+        if (ShowAlphaSlider)
         {
-            var slider = new Slider( SliderFunctionsAlpha.NewValueAlpha,
+            var slider = new Slider(SliderFunctionsAlpha.NewValueAlpha,
                                      SliderFunctionsAlpha.GetNewColorAlpha,
-                                     SliderFunctionsAlpha.GetPaintAlpha )
+                                     SliderFunctionsAlpha.GetPaintAlpha)
             {
                 PaintChessPattern = true
             };
-            result.Add( slider );
+            result.Add(slider);
         }
 
         return result;

@@ -2,16 +2,16 @@
 
 public class ColorPickerTouchActionEventArgs : EventArgs
 {
-    public long     Id                      { get; }
-    public Point    Location                { get; }
-    public bool     IsInContact             { get; }
-    public ColorPickerTouchActionType Type  { get; }
+    public long Id { get; }
+    public Point Location { get; }
+    public bool IsInContact { get; }
+    public ColorPickerTouchActionType Type { get; }
 
-    public ColorPickerTouchActionEventArgs( long id, ColorPickerTouchActionType type, Point location, bool isInContact )
+    public ColorPickerTouchActionEventArgs(long id, ColorPickerTouchActionType type, Point location, bool isInContact)
     {
-        Id          = id;
-        Location    = location;
+        Id = id;
+        Location = location;
         IsInContact = isInContact;
-        Type        = type;
+        Type = type;
     }
 }
