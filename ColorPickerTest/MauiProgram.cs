@@ -1,4 +1,6 @@
-﻿namespace ColorPickerTest;
+﻿using Microsoft.Maui.Controls.Compatibility.Hosting;
+
+namespace ColorPickerTest;
 
 using ColorPicker.Classes;
 
@@ -6,6 +8,7 @@ using ColorPicker.Classes;
 using ColorPicker.Platforms.WinUI;
 #elif ANDROID
 using ColorPicker.Platforms.Droid;
+using Microsoft.Maui.Controls.Compatibility.Hosting;
 #endif
 
 public static class MauiProgram
@@ -24,6 +27,7 @@ public static class MauiProgram
         // builder.UseCompatibilityColorPickersAndSliders( alreadyUsingSkiaSharp: true );
         //
         builder.UseCompatibilityColorPickersAndSliders();
+        builder.UseMauiCompatibility();
 
         builder.ConfigureFonts(fonts => fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"));
 
