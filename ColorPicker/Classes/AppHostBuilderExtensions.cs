@@ -2,7 +2,7 @@
 
 namespace ColorPicker.Classes;
 
-using ColorPicker.Controls;
+using Controls;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 public static class AppHostBuilderExtensions
@@ -26,8 +26,8 @@ public static class AppHostBuilderExtensions
             handlers.TryAddCompatibilityRenderer(typeof(ColorTriangle), typeof(ColorTriangle));
             handlers.TryAddCompatibilityRenderer(typeof(AlphaSlider), typeof(AlphaSlider));
             handlers.TryAddCompatibilityRenderer(typeof(LuminositySlider), typeof(LuminositySlider));
-            handlers.TryAddCompatibilityRenderer(typeof(RGBSliders), typeof(RGBSliders));
-            handlers.TryAddCompatibilityRenderer(typeof(HSLSliders), typeof(HSLSliders));
+            handlers.TryAddCompatibilityRenderer(typeof(RgbSliders), typeof(RgbSliders));
+            handlers.TryAddCompatibilityRenderer(typeof(HslSliders), typeof(HslSliders));
         });
 
         return builder;

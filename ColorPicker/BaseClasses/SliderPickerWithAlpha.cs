@@ -14,7 +14,7 @@ public abstract class SliderPickerWithAlpha : SliderPicker
         set => SetValue(ShowAlphaSliderProperty, value);
     }
 
-    static void HandleShowLuminositySet(BindableObject bindable, object oldValue, object newValue)
+    private static void HandleShowLuminositySet(BindableObject bindable, object oldValue, object newValue)
     {
         if (newValue != oldValue)
         {

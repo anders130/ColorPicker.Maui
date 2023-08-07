@@ -2,7 +2,7 @@
 
 public class PolarPoint
 {
-    float _angle;
+    private float _angle;
     public float Angle
     {
         get => _angle;
@@ -17,5 +17,5 @@ public class PolarPoint
         Angle = angle;
     }
 
-    public override string ToString() => string.Format("Radius: {0}; Angle: {1}", Radius, Angle);
+    public override string ToString() => $"Radius: {Radius}; Angle: {Angle}";
 }

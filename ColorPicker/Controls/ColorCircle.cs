@@ -2,10 +2,10 @@
 
 public class ColorCircle : SkiaSharpPickerBase
 {
-    long? _locationHSProgressId = null;
+    long? _locationHsProgressId = null;
     long? _locationLProgressId = null;
 
-    SKPoint _locationHS = new();
+    SKPoint _locationHs = new();
     SKPoint _locationL = new();
 
     readonly SKColor[] _sweepGradientColors = new SKColor[256];
@@ -21,7 +21,7 @@ public class ColorCircle : SkiaSharpPickerBase
         get => (bool)GetValue(ShowLuminosityWheelProperty);
         set => SetValue(ShowLuminosityWheelProperty, value);
     }
-    static void HandleShowLuminosity(BindableObject bindable, object oldValue, object newValue)
+    private static void HandleShowLuminosity(BindableObject bindable, object oldValue, object newValue)
     {
         if (newValue != oldValue)
             ((ColorCircle)bindable).InvalidateSurface();
@@ -38,7 +38,7 @@ public class ColorCircle : SkiaSharpPickerBase
         get => (Color)GetValue(WheelBackgroundColorProperty);
         set => SetValue(WheelBackgroundColorProperty, value);
     }
-    static void HandleWheelBackgroundColor(BindableObject bindable, object oldValue, object newValue)
+    private static void HandleWheelBackgroundColor(BindableObject bindable, object oldValue, object newValue)
     {
         if (newValue != oldValue)
         {
@@ -47,7 +47,7 @@ public class ColorCircle : SkiaSharpPickerBase
     }
 
     /// <summary>
-    /// Constuctor
+    /// Constructor
     /// </summary>
     public ColorCircle()
     {
@@ -63,10 +63,10 @@ public class ColorCircle : SkiaSharpPickerBase
         var canvasRadius = GetCanvasSize().Width / 2F;
         var point = ConvertToPixel(args.Location);
 
-        if (_locationHSProgressId is null && IsInHSArea(point, canvasRadius))
+        if (_locationHsProgressId is null && IsInHsArea(point, canvasRadius))
         {
-            _locationHSProgressId = args.Id;
-            _locationHS = LimitToHSRadius(point, canvasRadius);
+            _locationHsProgressId = args.Id;
+            _locationHs = LimitToHsRadius(point, canvasRadius);
             UpdateColors(canvasRadius);
         }
         else if (_locationLProgressId is null && IsInLArea(point, canvasRadius))
@@ -82,9 +82,9 @@ public class ColorCircle : SkiaSharpPickerBase
         var canvasRadius = GetCanvasSize().Width / 2F;
         var point = ConvertToPixel(args.Location);
 
-        if (_locationHSProgressId == args.Id)
+        if (_locationHsProgressId == args.Id)
         {
-            _locationHS = LimitToHSRadius(point, canvasRadius);
+            _locationHs = LimitToHsRadius(point, canvasRadius);
             UpdateColors(canvasRadius);
         }
         else if (_locationLProgressId == args.Id)
@@ -99,10 +99,10 @@ public class ColorCircle : SkiaSharpPickerBase
         var canvasRadius = GetCanvasSize().Width / 2F;
         var point = ConvertToPixel(args.Location);
 
-        if (_locationHSProgressId == args.Id)
+        if (_locationHsProgressId == args.Id)
         {
-            _locationHSProgressId = null;
-            _locationHS = LimitToHSRadius(point, canvasRadius);
+            _locationHsProgressId = null;
+            _locationHs = LimitToHsRadius(point, canvasRadius);
             UpdateColors(canvasRadius);
         }
         else if (_locationLProgressId == args.Id)
@@ -115,8 +115,8 @@ public class ColorCircle : SkiaSharpPickerBase
 
     protected override void OnTouchActionCancelled(ColorPickerTouchActionEventArgs args)
     {
-        if (_locationHSProgressId == args.Id)
-            _locationHSProgressId = null;
+        if (_locationHsProgressId == args.Id)
+            _locationHsProgressId = null;
         else if (_locationLProgressId == args.Id)
             _locationLProgressId = null;
     }
@@ -137,7 +137,7 @@ public class ColorCircle : SkiaSharpPickerBase
 
         PaintColorSweepGradient(canvas, canvasRadius);
         PaintGrayRadialGradient(canvas, canvasRadius);
-        PaintPicker(canvas, _locationHS);
+        PaintPicker(canvas, _locationHs);
     }
 
     protected override void OnSelectedColorChanging(Color color)
@@ -160,17 +160,17 @@ public class ColorCircle : SkiaSharpPickerBase
     protected override float GetSize(SKSize canvasSize) => canvasSize.Width;
     protected override float GetSize() => GetSize(GetCanvasSize());
 
-    void UpdateLocations(Color color, float canvasRadius)
+    private void UpdateLocations(Color color, float canvasRadius)
     {
-        if (color.GetLuminosity() != 0 || !IsInHSArea(_locationHS, canvasRadius))
+        if (color.GetLuminosity() != 0 || !IsInHsArea(_locationHs, canvasRadius))
         {
-            var angleHS = (0.5 - color.GetHue()) * (2 * Math.PI);
-            var radiusHS = WheelHSRadius(canvasRadius) * color.GetSaturation();
+            var angleHs = (0.5 - color.GetHue()) * (2 * Math.PI);
+            var radiusHs = WheelHsRadius(canvasRadius) * color.GetSaturation();
 
-            var resultHS = FromPolar(new PolarPoint((float)radiusHS, (float)angleHS));
-            resultHS.X += canvasRadius;
-            resultHS.Y += canvasRadius;
-            _locationHS = resultHS;
+            var resultHs = FromPolar(new PolarPoint(radiusHs, (float)angleHs));
+            resultHs.X += canvasRadius;
+            resultHs.Y += canvasRadius;
+            _locationHs = resultHs;
         }
 
         var polarL = ToPolar(ToWheelLCoordinates(_locationL, canvasRadius));
@@ -184,22 +184,22 @@ public class ColorCircle : SkiaSharpPickerBase
         _locationL = resultL;
     }
 
-    void UpdateColors(float canvasRadius)
+    private void UpdateColors(float canvasRadius)
     {
-        var wheelHSPoint = ToWheelHSCoordinates(_locationHS, canvasRadius);
+        var wheelHsPoint = ToWheelHsCoordinates(_locationHs, canvasRadius);
         var wheelLPoint = ToWheelLCoordinates(_locationL, canvasRadius);
 
-        var newColor = WheelPointToColor(wheelHSPoint, wheelLPoint);
+        var newColor = WheelPointToColor(wheelHsPoint, wheelLPoint);
         SelectedColor = newColor;
     }
 
-    bool IsInHSArea(SKPoint point, float canvasRadius)
+    private bool IsInHsArea(SKPoint point, float canvasRadius)
     {
         var polar = ToPolar(new SKPoint(point.X - canvasRadius, point.Y - canvasRadius));
-        return polar.Radius <= WheelHSRadius(canvasRadius);
+        return polar.Radius <= WheelHsRadius(canvasRadius);
     }
 
-    bool IsInLArea(SKPoint point, float canvasRadius)
+    private bool IsInLArea(SKPoint point, float canvasRadius)
     {
         if (!ShowLuminosityWheel)
             return false;
@@ -210,7 +210,7 @@ public class ColorCircle : SkiaSharpPickerBase
             && polar.Radius >= WheelLRadius(canvasRadius) - (GetPickerRadiusPixels() / 2F);
     }
 
-    void PaintBackground(SKCanvas canvas, float canvasRadius)
+    private void PaintBackground(SKCanvas canvas, float canvasRadius)
     {
         var center = new SKPoint(canvasRadius, canvasRadius);
 
@@ -223,7 +223,7 @@ public class ColorCircle : SkiaSharpPickerBase
         canvas.DrawCircle(center, canvasRadius - GetPickerRadiusPixels(), paint);
     }
 
-    void PaintLGradient(SKCanvas canvas, float canvasRadius)
+    private void PaintLGradient(SKCanvas canvas, float canvasRadius)
     {
         var center = new SKPoint(canvasRadius, canvasRadius);
 
@@ -248,7 +248,7 @@ public class ColorCircle : SkiaSharpPickerBase
         canvas.DrawCircle(center, WheelLRadius(canvasRadius), paint);
     }
 
-    void PaintColorSweepGradient(SKCanvas canvas, float canvasRadius)
+    private void PaintColorSweepGradient(SKCanvas canvas, float canvasRadius)
     {
         var center = new SKPoint(canvasRadius, canvasRadius);
 
@@ -260,20 +260,20 @@ public class ColorCircle : SkiaSharpPickerBase
             Shader = shader,
             Style = SKPaintStyle.Fill
         };
-        canvas.DrawCircle(center, WheelHSRadius(canvasRadius), paint);
+        canvas.DrawCircle(center, WheelHsRadius(canvasRadius), paint);
     }
 
-    void PaintGrayRadialGradient(SKCanvas canvas, float canvasRadius)
+    private void PaintGrayRadialGradient(SKCanvas canvas, float canvasRadius)
     {
         var center = new SKPoint(canvasRadius, canvasRadius);
 
-        var colors = new SKColor[]
+        var colors = new[]
         {
             SKColors.Gray,
             SKColors.Transparent
         };
 
-        var shader = SKShader.CreateRadialGradient(center, WheelHSRadius(canvasRadius), colors, null, SKShaderTileMode.Clamp);
+        var shader = SKShader.CreateRadialGradient(center, WheelHsRadius(canvasRadius), colors, null, SKShaderTileMode.Clamp);
 
         var paint = new SKPaint
         {
@@ -284,19 +284,19 @@ public class ColorCircle : SkiaSharpPickerBase
         canvas.DrawPaint(paint);
     }
 
-    SKPoint ToWheelHSCoordinates(SKPoint point, float canvasRadius)
+    private SKPoint ToWheelHsCoordinates(SKPoint point, float canvasRadius)
     {
         var result = new SKPoint(point.X, point.Y);
 
         result.X -= canvasRadius;
         result.Y -= canvasRadius;
-        result.X /= WheelHSRadius(canvasRadius);
-        result.Y /= WheelHSRadius(canvasRadius);
+        result.X /= WheelHsRadius(canvasRadius);
+        result.Y /= WheelHsRadius(canvasRadius);
 
         return result;
     }
 
-    SKPoint ToWheelLCoordinates(SKPoint point, float canvasRadius)
+    private SKPoint ToWheelLCoordinates(SKPoint point, float canvasRadius)
     {
         var result = new SKPoint(point.X, point.Y);
 
@@ -308,25 +308,25 @@ public class ColorCircle : SkiaSharpPickerBase
         return result;
     }
 
-    Color WheelPointToColor(SKPoint pointHS, SKPoint pointL)
+    private Color WheelPointToColor(SKPoint pointHs, SKPoint pointL)
     {
-        var polarHS = ToPolar(pointHS);
+        var polarHs = ToPolar(pointHs);
         var polarL = ToPolar(pointL);
 
         polarL.Angle += (float)Math.PI / 2F;
         polarL = ToPolar(FromPolar(polarL));
 
-        var h = (Math.PI - polarHS.Angle) / (2 * Math.PI);
-        var s = polarHS.Radius;
+        var h = (Math.PI - polarHs.Angle) / (2 * Math.PI);
+        var s = polarHs.Radius;
         var l = Math.Abs(polarL.Angle) / Math.PI;
 
         return Color.FromHsla(h, s, l, SelectedColor.Alpha);
     }
 
-    SKPoint LimitToHSRadius(SKPoint point, float canvasRadius)
+    private SKPoint LimitToHsRadius(SKPoint point, float canvasRadius)
     {
         var polar = ToPolar(new SKPoint(point.X - canvasRadius, point.Y - canvasRadius));
-        polar.Radius = polar.Radius < WheelHSRadius(canvasRadius) ? polar.Radius : WheelHSRadius(canvasRadius);
+        polar.Radius = polar.Radius < WheelHsRadius(canvasRadius) ? polar.Radius : WheelHsRadius(canvasRadius);
         var result = FromPolar(polar);
 
         result.X += canvasRadius;
@@ -335,7 +335,7 @@ public class ColorCircle : SkiaSharpPickerBase
         return result;
     }
 
-    SKPoint LimitToLRadius(SKPoint point, float canvasRadius)
+    private SKPoint LimitToLRadius(SKPoint point, float canvasRadius)
     {
         var polar = ToPolar(new SKPoint(point.X - canvasRadius, point.Y - canvasRadius));
         polar.Radius = WheelLRadius(canvasRadius);
@@ -347,7 +347,7 @@ public class ColorCircle : SkiaSharpPickerBase
         return result;
     }
 
-    static PolarPoint ToPolar(SKPoint point)
+    private static PolarPoint ToPolar(SKPoint point)
     {
         var radius = (float)Math.Sqrt((point.X * point.X) + (point.Y * point.Y));
         var angle = (float)Math.Atan2(point.Y, point.X);
@@ -355,7 +355,7 @@ public class ColorCircle : SkiaSharpPickerBase
         return new PolarPoint(radius, angle);
     }
 
-    static SKPoint FromPolar(PolarPoint point)
+    private static SKPoint FromPolar(PolarPoint point)
     {
         var x = (float)(point.Radius * Math.Cos(point.Angle));
         var y = (float)(point.Radius * Math.Sin(point.Angle));
@@ -363,10 +363,10 @@ public class ColorCircle : SkiaSharpPickerBase
         return new SKPoint(x, y);
     }
 
-    float WheelHSRadius(float canvasRadius)
+    private float WheelHsRadius(float canvasRadius)
        => !ShowLuminosityWheel ? canvasRadius - GetPickerRadiusPixels()
                                 : canvasRadius - (3 * GetPickerRadiusPixels()) - 2;
 
-    float WheelLRadius(float canvasRadius)
+    private float WheelLRadius(float canvasRadius)
        => canvasRadius - GetPickerRadiusPixels();
 }

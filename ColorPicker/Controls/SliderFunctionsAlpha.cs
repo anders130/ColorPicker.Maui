@@ -2,7 +2,7 @@
 
 public static class SliderFunctionsAlpha
 {
-    public static float NewValueAlpha(Color color) => (float)color.Alpha;
+    public static float NewValueAlpha(Color color) => color.Alpha;
 
     public static Color GetNewColorAlpha(float newValue, Color oldColor)
         => Color.FromRgba(oldColor.Red, oldColor.Green, oldColor.Blue, newValue);
@@ -23,7 +23,7 @@ public static class SliderFunctionsAlpha
             StrokeCap = SKStrokeCap.Round,
             StrokeJoin = SKStrokeJoin.Round,
             Shader = SKShader.CreateLinearGradient(startPoint, endPoint
-                    , new SKColor[] { startColor, endColor }, new float[] { 0, 1 }, SKShaderTileMode.Clamp)
+                    , new[] { startColor, endColor }, new float[] { 0, 1 }, SKShaderTileMode.Clamp)
         };
         return paint;
     }

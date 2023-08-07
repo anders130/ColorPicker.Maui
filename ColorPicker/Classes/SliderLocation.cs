@@ -8,7 +8,7 @@ public class SliderLocation
 
     public long? LocationProgressId { get; set; }
     public float OffsetLocationMultiplier { get; set; }
-    public SKPoint Location { get; set; } = new SKPoint();
+    public SKPoint Location { get; set; } = new();
 
-    public float GetSliderOffset(float PickerRadiusPixels) => PickerRadiusPixels * OffsetLocationMultiplier;
+    public float GetSliderOffset(float pickerRadiusPixels) => pickerRadiusPixels * OffsetLocationMultiplier;
 }

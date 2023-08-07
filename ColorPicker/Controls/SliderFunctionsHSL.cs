@@ -1,6 +1,6 @@
 ﻿namespace ColorPicker.Controls;
 
-public static class SliderFunctionsHSL
+public static class SliderFunctionsHsl
 {
     public static float NewValueH(Color color) => color.GetHue();
     public static float NewValueS(Color color) => color.GetSaturation();
@@ -36,26 +36,26 @@ public static class SliderFunctionsHSL
 
     public static SKPaint GetPaintS(Color color, SKPoint startPoint, SKPoint endPoint)
     {
-        var colors = new SKColor[]
+        var colors = new[]
             {
                 Color.FromHsla( color.GetHue(), 0.0, color.GetLuminosity() ).ToSKColor(),
                 Color.FromHsla( color.GetHue(), 1.0, color.GetLuminosity() ).ToSKColor()
             };
 
-        var colorPos = new float[] { 0F, 1F };
+        var colorPos = new[] { 0F, 1F };
         return GetPaint(colors, colorPos, startPoint, endPoint);
     }
 
     public static SKPaint GetPaintL(Color color, SKPoint startPoint, SKPoint endPoint)
     {
-        var colors = new SKColor[]
+        var colors = new[]
             {
                 Color.FromHsla(color.GetHue(), color.GetSaturation(), 0.0).ToSKColor(),
                 Color.FromHsla(color.GetHue(), color.GetSaturation(), 0.5).ToSKColor(),
                 Color.FromHsla(color.GetHue(), color.GetSaturation(), 1.0).ToSKColor()
             };
 
-        var colorPos = new float[] { 0F, 0.5F, 1F };
+        var colorPos = new[] { 0F, 0.5F, 1F };
         return GetPaint(colors, colorPos, startPoint, endPoint);
     }
 

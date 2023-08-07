@@ -2,9 +2,9 @@
 
 public class Slider : SliderBase, Interfaces.ISlider
 {
-    readonly Func<Color, float> _newValue;
-    readonly Func<float, Color, Color> _getNewColor;
-    readonly Func<Color, SKPoint, SKPoint, SKPaint> _getPaint;
+    private readonly Func<Color, float> _newValue;
+    private readonly Func<float, Color, Color> _getNewColor;
+    private readonly Func<Color, SKPoint, SKPoint, SKPaint> _getPaint;
 
     public Slider(Func<Color, float> newValue,
                    Func<float, Color, Color> getNewColor,

@@ -1,6 +1,6 @@
 ﻿namespace ColorPicker.Controls;
 
-public static class SliderFunctionsRGB
+public static class SliderFunctionsRgb
 {
     public static float NewValueR(Color color) => color.Red;
     public static float NewValueG(Color color) => color.Green;
@@ -44,7 +44,7 @@ public static class SliderFunctionsRGB
             Style = SKPaintStyle.Stroke,
             StrokeCap = SKStrokeCap.Round,
             StrokeJoin = SKStrokeJoin.Round,
-            Shader = SKShader.CreateLinearGradient(startPoint, endPoint, new SKColor[] { startColor, endColor },
+            Shader = SKShader.CreateLinearGradient(startPoint, endPoint, new[] { startColor, endColor },
                                                         new float[] { 0, 1 }, SKShaderTileMode.Clamp)
         };
         return paint;

@@ -5,8 +5,8 @@ public class LuminositySlider : SliderPicker
     protected override IEnumerable<SliderBase> GetSliders()
         => new SliderBase[]
             {
-                new Slider( SliderFunctionsHSL.NewValueL,
-                            SliderFunctionsHSL.GetNewColorL,
-                            SliderFunctionsHSL.GetPaintL )
+                new Slider( SliderFunctionsHsl.NewValueL,
+                            SliderFunctionsHsl.GetNewColorL,
+                            SliderFunctionsHsl.GetPaintL )
             };
 }

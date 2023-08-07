@@ -1,34 +1,33 @@
 ﻿namespace ColorPicker.Controls;
 
-public class HSLSliders : SliderPickerWithAlpha
+public class HslSliders : SliderPickerWithAlpha
 {
     protected override IEnumerable<SliderBase> GetSliders()
     {
         var result = new List<Slider>()
             {
-                new Slider( SliderFunctionsHSL.NewValueH,
-                            SliderFunctionsHSL.GetNewColorH,
-                            SliderFunctionsHSL.GetPaintH ),
+                new(SliderFunctionsHsl.NewValueH,
+                            SliderFunctionsHsl.GetNewColorH,
+                            SliderFunctionsHsl.GetPaintH),
 
-                new Slider( SliderFunctionsHSL.NewValueS,
-                            SliderFunctionsHSL.GetNewColorS,
-                            SliderFunctionsHSL.GetPaintS),
+                new(SliderFunctionsHsl.NewValueS,
+                            SliderFunctionsHsl.GetNewColorS,
+                            SliderFunctionsHsl.GetPaintS),
 
-                new Slider( SliderFunctionsHSL.NewValueL,
-                            SliderFunctionsHSL.GetNewColorL,
-                            SliderFunctionsHSL.GetPaintL )
+                new(SliderFunctionsHsl.NewValueL,
+                            SliderFunctionsHsl.GetNewColorL,
+                            SliderFunctionsHsl.GetPaintL)
             };
 
-        if (ShowAlphaSlider)
+        if (!ShowAlphaSlider) return result;
+
+        var slider = new Slider(SliderFunctionsAlpha.NewValueAlpha,
+            SliderFunctionsAlpha.GetNewColorAlpha,
+            SliderFunctionsAlpha.GetPaintAlpha)
         {
-            var slider = new Slider(SliderFunctionsAlpha.NewValueAlpha,
-                                     SliderFunctionsAlpha.GetNewColorAlpha,
-                                     SliderFunctionsAlpha.GetPaintAlpha)
-            {
-                PaintChessPattern = true
-            };
-            result.Add(slider);
-        }
+            PaintChessPattern = true
+        };
+        result.Add(slider);
 
         return result;
     }

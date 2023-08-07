@@ -21,7 +21,6 @@ public abstract class ColorPickerViewBase : Layout<View>, IColorPicker, IRegiste
                          = BindableProperty.Create(nameof(AttachedColorPicker),
                                                     typeof(IColorPicker),
                                                     typeof(ColorPickerViewBase),
-                                                    null,
                                                     propertyChanged: HandleConnectedColorPicker);
     //  Backing store
     //
@@ -43,28 +42,26 @@ public abstract class ColorPickerViewBase : Layout<View>, IColorPicker, IRegiste
 
     //  Handles SelectedColor change
     //
-    static void HandleSelectedColor(BindableObject bindable, object oldValue, object newValue)
+    private static void HandleSelectedColor(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is not ColorPickerViewBase viewBase)
             return;
 
-        if (oldValue != newValue)
+        if (oldValue == newValue) return;
+        //  Calls subclass implementation
+        viewBase.OnSelectedColorChanging((Color)newValue);
+
+        if (viewBase.AttachedColorPicker is not null)
         {
-            //  Calls subclass implementation
-            viewBase.OnSelectedColorChanging((Color)newValue);
-
-            if (viewBase.AttachedColorPicker is not null)
-            {
-                viewBase.AttachedColorPicker.SelectedColor = (Color)newValue;
-            }
-
-            viewBase.RaiseSelectedColorChanged((Color)oldValue, (Color)newValue);
+            viewBase.AttachedColorPicker.SelectedColor = (Color)newValue;
         }
+
+        viewBase.RaiseSelectedColorChanged((Color)oldValue, (Color)newValue);
     }
 
     //  Connects to and/or disconnects from bound ColorPicker 
     //
-    static void HandleConnectedColorPicker(BindableObject bindable, object oldValue, object newValue)
+    private static void HandleConnectedColorPicker(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is not ColorPickerViewBase viewBase)
             return;
@@ -74,17 +71,15 @@ public abstract class ColorPickerViewBase : Layout<View>, IColorPicker, IRegiste
             ((IColorPicker)oldValue).PropertyChanged -= viewBase.BoundColorPicker_PropertyChanged;
         }
 
-        if (newValue is not null)
-        {
-            ((IColorPicker)newValue).PropertyChanged += viewBase.BoundColorPicker_PropertyChanged;
-            ((IColorPicker)newValue).SelectedColor = viewBase.SelectedColor;
-        }
+        if (newValue is null) return;
+        ((IColorPicker)newValue).PropertyChanged += viewBase.BoundColorPicker_PropertyChanged;
+        ((IColorPicker)newValue).SelectedColor = viewBase.SelectedColor;
     }
 
     /// <summary>
     /// Property changed event handler
     /// </summary>
-    void BoundColorPicker_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void BoundColorPicker_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SelectedColor))
         {

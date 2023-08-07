@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace ColorPicker.Interfaces;
+﻿namespace ColorPicker.Interfaces;
 
 public interface IColorPicker : INotifyPropertyChanged
 {
-    Color SelectedColor { get; set; }
-    IColorPicker AttachedColorPicker { get; set; }
+    public Color SelectedColor { get; set; }
+    public IColorPicker AttachedColorPicker { get; set; }
 }

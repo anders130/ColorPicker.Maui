@@ -1,8 +1,8 @@
 ﻿namespace ColorPicker.BaseClasses;
 
-using ColorPicker.Behaviors;
+using Behaviors;
 #if WINDOWS
-using ColorPicker.Platforms.WinUI;
+using Platforms.WinUI;
 #elif ANDROID
 using ColorPicker.Platforms.Droid;
 #endif
@@ -25,13 +25,13 @@ public abstract class SkiaSharpPickerBase : ColorPickerViewBase
         set => SetValue(PickerRadiusScaleProperty, value);
     }
 
-    static void HandlePickerRadiusScaleSet(BindableObject bindable, object oldValue, object newValue)
+    private static void HandlePickerRadiusScaleSet(BindableObject bindable, object oldValue, object newValue)
             => ((SkiaSharpPickerBase)bindable).InvalidateSurface();
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public SkiaSharpPickerBase()
+    protected SkiaSharpPickerBase()
     {
         HorizontalOptions = LayoutOptions.Center;
         VerticalOptions = LayoutOptions.Center;
@@ -39,7 +39,7 @@ public abstract class SkiaSharpPickerBase : ColorPickerViewBase
         var touchBehavior = new ColorPickerTouchBehavior();
 
 #if WINDOWS
-        var touchImpl = new ColorPickerTouchActionBehaviorWinUI(touchBehavior);
+        var touchImpl = new ColorPickerTouchActionBehaviorWinUi(touchBehavior);
 #elif ANDROID
         var touchImpl = new ColorPickerTouchActionBehaviorDroid(touchBehavior);
 #else
@@ -103,10 +103,10 @@ public abstract class SkiaSharpPickerBase : ColorPickerViewBase
         canvas.DrawCircle(point, GetPickerRadiusPixels(), paint);
     }
 
-    void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+    private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
       => OnPaintSurface(e.Surface.Canvas, e.Info.Width, e.Info.Height);
 
-    void OnTouchAction(object sender, ColorPickerTouchActionEventArgs e)
+    private void OnTouchAction(object sender, ColorPickerTouchActionEventArgs e)
     {
         switch (e.Type)
         {

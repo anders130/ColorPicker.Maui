@@ -11,7 +11,7 @@
             VerticalOptions="Center">
 
             <controls:ColorWheel/>
-            <controls:RGBSliders ShowAlphaSlider="False"/>
+            <controls:RgbSliders ShowAlphaSlider="False"/>
 
         </VerticalStackLayout>
     </ScrollView>

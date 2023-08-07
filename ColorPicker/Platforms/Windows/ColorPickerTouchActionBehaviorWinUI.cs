@@ -3,14 +3,14 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
-public class ColorPickerTouchActionBehaviorWinUI : Behavior<SkiaSharpPickerBase>
+public class ColorPickerTouchActionBehaviorWinUi : Behavior<SkiaSharpPickerBase>
 {
-    Action<Element, ColorPickerTouchActionEventArgs> _onTouchAction;
-    FrameworkElement _frameworkElement;
-    ColorPickerTouchBehavior _sharedBehavior;
-    Element _boundElement;
+    private Action<Element, ColorPickerTouchActionEventArgs> _onTouchAction;
+    private FrameworkElement _frameworkElement;
+    private ColorPickerTouchBehavior _sharedBehavior;
+    private Element _boundElement;
 
-    public ColorPickerTouchActionBehaviorWinUI(ColorPickerTouchBehavior sharedBehavior)
+    public ColorPickerTouchActionBehaviorWinUi(ColorPickerTouchBehavior sharedBehavior)
     {
         ArgumentNullException.ThrowIfNull(sharedBehavior);
 
@@ -26,7 +26,7 @@ public class ColorPickerTouchActionBehaviorWinUI : Behavior<SkiaSharpPickerBase>
         base.OnAttachedTo(bindable);
     }
 
-    void OnHandlerChanged(object sender, EventArgs e)
+    private void OnHandlerChanged(object sender, EventArgs e)
     {
         if (sender is not SkiaSharpPickerBase bindable)
             return;
@@ -36,19 +36,17 @@ public class ColorPickerTouchActionBehaviorWinUI : Behavior<SkiaSharpPickerBase>
         var context = bindable.Handler?.MauiContext ?? bindable.Parent.Handler.MauiContext;
         _frameworkElement = bindable.ToPlatform(context);
 
-        if (_sharedBehavior is not null && _frameworkElement is not null)
-        {
-            // Save the method to call on touch events
-            _onTouchAction = _sharedBehavior.OnTouchAction;
+        if (_sharedBehavior is null || _frameworkElement is null) return;
+        // Save the method to call on touch events
+        _onTouchAction = _sharedBehavior.OnTouchAction;
 
-            // Set event handlers on FrameworkElement
-            _frameworkElement.PointerEntered += OnPointerEntered;
-            _frameworkElement.PointerPressed += OnPointerPressed;
-            _frameworkElement.PointerMoved += OnPointerMoved;
-            _frameworkElement.PointerReleased += OnPointerReleased;
-            _frameworkElement.PointerExited += OnPointerExited;
-            _frameworkElement.PointerCanceled += OnPointerCancelled;
-        }
+        // Set event handlers on FrameworkElement
+        _frameworkElement.PointerEntered += OnPointerEntered;
+        _frameworkElement.PointerPressed += OnPointerPressed;
+        _frameworkElement.PointerMoved += OnPointerMoved;
+        _frameworkElement.PointerReleased += OnPointerReleased;
+        _frameworkElement.PointerExited += OnPointerExited;
+        _frameworkElement.PointerCanceled += OnPointerCancelled;
     }
 
     protected override void OnDetachingFrom(SkiaSharpPickerBase bindable)
@@ -69,34 +67,34 @@ public class ColorPickerTouchActionBehaviorWinUI : Behavior<SkiaSharpPickerBase>
         base.OnDetachingFrom(bindable);
     }
 
-    void OnPointerEntered(object sender, PointerRoutedEventArgs args)
+    private void OnPointerEntered(object sender, PointerRoutedEventArgs args)
             => CommonHandler(sender, ColorPickerTouchActionType.Entered, args);
 
-    void OnPointerMoved(object sender, PointerRoutedEventArgs args)
+    private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
             => CommonHandler(sender, ColorPickerTouchActionType.Moved, args);
 
-    void OnPointerReleased(object sender, PointerRoutedEventArgs args)
+    private void OnPointerReleased(object sender, PointerRoutedEventArgs args)
             => CommonHandler(sender, ColorPickerTouchActionType.Released, args);
 
-    void OnPointerExited(object sender, PointerRoutedEventArgs args)
+    private void OnPointerExited(object sender, PointerRoutedEventArgs args)
             => CommonHandler(sender, ColorPickerTouchActionType.Exited, args);
 
-    void OnPointerCancelled(object sender, PointerRoutedEventArgs args)
+    private void OnPointerCancelled(object sender, PointerRoutedEventArgs args)
             => CommonHandler(sender, ColorPickerTouchActionType.Cancelled, args);
 
-    void OnPointerPressed(object sender, PointerRoutedEventArgs args)
+    private void OnPointerPressed(object sender, PointerRoutedEventArgs args)
     {
         CommonHandler(sender, ColorPickerTouchActionType.Pressed, args);
 
         // Check setting of Capture property
         if (_sharedBehavior.Capture)
-            (sender as FrameworkElement).CapturePointer(args.Pointer);
+            (sender as FrameworkElement)?.CapturePointer(args.Pointer);
     }
 
-    void CommonHandler(object sender, ColorPickerTouchActionType touchActionType, PointerRoutedEventArgs args)
+    private void CommonHandler(object sender, ColorPickerTouchActionType touchActionType, PointerRoutedEventArgs args)
     {
         var pointerPoint = args.GetCurrentPoint(sender as UIElement);
-        Windows.Foundation.Point winPoint = pointerPoint.Position;
+        var winPoint = pointerPoint.Position;
 
         _onTouchAction(_boundElement,
                         new ColorPickerTouchActionEventArgs(args.Pointer.PointerId,
